@@ -23,14 +23,17 @@ class ZufangPipeline(object):
             db_user=crawler.settings.get('DB_USER'),
             db_pass=crawler.settings.get('DB_PASS'))
 
+    #爬虫启用时调用，连接到数据库
     def open_spider(self,spider):
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.zfdb = self.client[self.db_name]
         # self.zfdb.authenticate(self.db_user, self.db_pass)
 
+    #爬虫关闭时调用，关闭数据库连接
     def close_spider(self,spider):
         self.client.close()
 
+    #将item保存至mongodb
     def process_item(self, item, spider):
         self.collection = item['region']
         if item['region']=='不限':
